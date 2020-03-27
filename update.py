@@ -8,6 +8,7 @@ import shutil
 from zipfile import ZipFile
 
 _JHU_MASTER = r'https://github.com/CSSEGISandData/COVID-19/archive/master.zip'
+_CDS_TIMESERIES = r'https://coronadatascraper.com/timeseries.csv'
 _DF = r'http://www.bay12games.com/dwarves/df_47_04_win.zip'
 
 
@@ -17,7 +18,6 @@ def download_zip_and_unpack_to_dir(zip_url, _dir):
     with ZipFile(os.path.join(_dir, 'temp.zip')) as zf:
         zf.extractall(path=os.path.join(_dir))
     return _dir
-
 
 def update_jhu_data():
     new_temp_dir = tempfile.TemporaryDirectory()
@@ -31,4 +31,9 @@ def update_jhu_data():
             os.path.join(local_daily_reports_dir, f)
         )
 
-update_jhu_data()
+def update_cds_data():
+    with open(os.path.join('data', 'cases-cds', 'timeseries.csv'), 'wb') as out:
+        res = urlopen(_CDS_TIMESERIES)
+        out.write(res.read())
+
+update_cds_data()
